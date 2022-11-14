@@ -5,7 +5,6 @@ const episodes = {
 	mutations: {
 		setEpisodes(state, data) {
 			state.episodes = [...state.episodes, ...data]
-			console.log(state.episodes);
 		}
 	},
 	actions: {

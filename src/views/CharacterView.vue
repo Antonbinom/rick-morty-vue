@@ -1,11 +1,11 @@
 <template>
   <div class="character__wrapper" v-if="item">
     <div class="character__card">
-      <h1 class="character-name">Name</h1>
-      <img class="character-image" src="" alt="" />
+      <h1 class="character-name">{{ item.name }}</h1>
+      <img class="character-image" :src="item.image" :alt="item.name" />
       <div class="character__info">
-        <span class="character-text">Species: sdsd</span>
-        <span class="character-text">Location: sdsdds</span>
+        <span class="character-text">Species: {{ item.species }}</span>
+        <span class="character-text">Location: {{ item.location.name }}</span>
       </div>
     </div>
   </div>
@@ -18,18 +18,13 @@ export default {
       item: null,
     };
   },
-  // computed: {
-  //   characters() {
-  //     return this.$store.getters["getCharacters"];
-  //   },
-  // },
   created() {
-    const alias = this.$route.params.ItemAlias;
+    const characterId = this.$route.params.id;
+    console.log(+characterId);
     const item = this.$store.getters["getCharacters"].find(
-      (el) => el.alias === alias
+      (el) => el.id === +characterId
     );
     this.item = item;
-    console.log(this.item);
   },
 };
 </script>
