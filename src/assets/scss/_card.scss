@@ -1,0 +1,54 @@
+.cards {
+	margin-top: 110px;
+	padding: 20px 0;
+}
+.cards-search {
+	width: 100%;
+	height: auto;
+	margin-left: 50px;
+}
+.cards__list {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+.cards__item {
+	display: flex;
+	flex-direction: column;
+	max-width: 300px;
+	height: auto;
+	padding: 30px 20px;
+	background: tomato;
+	border-radius: 5px;
+}
+
+.cards__item-name {
+	display: inline-block;
+	width: max-content;
+	font-size: 21px;
+	font-weight: 700;
+}
+
+.cards__item-name:hover {
+	text-decoration: underline;
+}
+
+.cards__item-image {
+	margin: 20px 0 10px;
+}
+
+.cards__item-episodes {
+	margin-top: 20px;
+	padding-top: 10px;
+	border-top: 2px solid yellow;
+}
+
+.cards__item-list {
+	margin-top: 10px;
+}
+
+.cards__item-text {
+	display: inline-block;
+	width: 100%;
+}
