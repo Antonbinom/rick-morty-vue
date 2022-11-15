@@ -28,6 +28,7 @@
           :character="character"
           :episodes="episodes"
         />
+        <div v-observe-visibility="handleInfinityScroll"></div>
       </ul>
     </div>
   </main>
@@ -43,8 +44,7 @@ export default {
       value: "",
       sortValue: "",
       episodesArr: [],
-      status: "",
-      name: "",
+      nextPage: "",
       loading: false,
     };
   },
@@ -58,6 +58,23 @@ export default {
     },
   },
   methods: {
+    handleInfinityScroll(isVisible) {
+      if (!isVisible) return;
+      const getCharacters = (url) => {
+        const characters = this.$store.getters["getCharacters"];
+        axios.get(url).then((response) => {
+          this.$store.dispatch("setCharacters", [
+            ...characters,
+            ...response.data.results,
+          ]);
+          if (response.data.info.next !== null) {
+            this.nextPage = response.data.info.next;
+          }
+        });
+      };
+      if (this.nextPage !== null) getCharacters(this.nextPage);
+    },
+
     onSearch: debounce(function (event) {
       this.$store.dispatch("setCharacters", []);
       this.name = event.target.value;
@@ -84,11 +101,14 @@ export default {
         .catch((error) => console.log(error.message));
     },
   },
+
   mounted() {
     this.episodesArr = [];
 
     axios.get("https://rickandmortyapi.com/api/character").then((response) => {
       this.$store.dispatch("setCharacters", response.data.results);
+      this.nextPage = response.data.info.next;
+      console.log(this.nextPage);
     });
 
     // const getCharacters = (url) => {
