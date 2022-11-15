@@ -3,7 +3,7 @@
     <div class="container">
       <div class="cards__filter">
         <input
-          v-model="searchValue"
+          @input="onSearch($event)"
           id="filter"
           class="cards-search"
           type="text"
@@ -20,15 +20,15 @@
           <option value="">All</option>
         </select>
       </div>
-      <ul v-if="characters" class="cards__list">
+      <div v-if="loading" class="empty">Ничего не найдено!</div>
+      <ul v-if="!loading" class="cards__list">
         <Card
           v-for="character in characters"
-          :key="character.name"
+          :key="character.id"
           :character="character"
           :episodes="episodes"
         />
       </ul>
-      <div v-if="!characters.length" class="empty">Ничего не найдено!</div>
     </div>
   </main>
 </template>
@@ -36,12 +36,16 @@
 <script>
 import Card from "@/components/CardComponent.vue";
 import axios from "axios";
+import { debounce } from "debounce";
 export default {
   data() {
     return {
       value: "",
       sortValue: "",
       episodesArr: [],
+      status: "",
+      name: "",
+      loading: false,
     };
   },
   components: { Card },
@@ -52,29 +56,36 @@ export default {
     episodes() {
       return this.$store.getters["getEpisodes"];
     },
-    searchValue: {
-      set(value) {
-        this.$store.dispatch("setSearchValue", value);
-      },
-      get() {
-        return this.$store.getters["getSearchValue"];
-      },
-    },
   },
   methods: {
-    onSort(event) {
-      const status = event.target.value;
+    onSearch: debounce(function (event) {
+      this.$store.dispatch("setCharacters", []);
+      this.name = event.target.value;
       axios
-        .get(`https://rickandmortyapi.com/api/character/?status=${status}`)
+        .get(
+          `https://rickandmortyapi.com/api/character/?name=${this.name}&status=${this.status}`
+        )
         .then((response) => {
           this.$store.dispatch("setCharacters", response.data.results);
-        });
+          this.loading = false;
+        })
+        .catch((error) => console.log(error.message));
+    }, 500),
+
+    onSort(event) {
+      this.status = event.target.value;
+      axios
+        .get(
+          `https://rickandmortyapi.com/api/character/?name=${this.name}&status=${this.status}`
+        )
+        .then((response) => {
+          this.$store.dispatch("setCharacters", response.data.results);
+        })
+        .catch((error) => console.log(error.message));
     },
   },
   mounted() {
     this.episodesArr = [];
-    this.$store.dispatch("setSearchValue", "");
-    this.$store.dispatch("setSortValue", "");
 
     axios.get("https://rickandmortyapi.com/api/character").then((response) => {
       this.$store.dispatch("setCharacters", response.data.results);
