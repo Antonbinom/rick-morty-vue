@@ -2,10 +2,18 @@
 	margin-top: 110px;
 	padding: 20px 0;
 }
+.cards__filter {
+	display: flex;
+}
 .cards-search {
 	width: 100%;
+	max-width: 300px;
 	height: auto;
-	margin-left: 50px;
+	margin-right: 20px;
+}
+.cards-select {
+	width: 100%;
+	max-width: 300px;
 }
 .cards__list {
 	display: flex;

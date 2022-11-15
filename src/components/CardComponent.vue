@@ -17,13 +17,9 @@
     <div class="cards__item-episodes">
       <h3>Episodes</h3>
       <ul class="cards__item-list">
-        <li>
-          <router-link :to="`/episode/`">
-            Ep. {{}}
-            <!-- {{
-              episode.replace("https://rickandmortyapi.com/api/episode/", "")
-            }} -->
-            - {{}}
+        <li v-for="episode in filteredEpisodes" :key="episode.date">
+          <router-link :to="`/episode/${episode.id}`">
+            Ep. {{ episode.id }} - {{ episode.name }}
           </router-link>
         </li>
       </ul>
@@ -44,16 +40,14 @@ export default {
     },
   },
   computed: {
-    // someEpisode() {
-    //   // console.log(this.card.episode);
-    //   return this.episodes.filter((episode) => {
-    //     // console.log(episode.url);
-    //     this.card.episode.forEach((item) => {
-    //       // console.log(item);
-    //       return episode.url === item;
-    //     });
-    //   });
-    // },
+    filteredEpisodes() {
+      return this.episodes
+        .filter((episode) => episode.characters.includes(this.character.url))
+        .sort(function () {
+          return 0.5 - Math.random();
+        })
+        .slice(0, 5);
+    },
   },
 };
 </script>
