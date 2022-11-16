@@ -2,8 +2,7 @@
   <main class="cards">
     <div class="container">
       <FilterComponent />
-      <div v-if="loading === 'not found'" class="empty">Ничего не найдено!</div>
-      <ul v-if="loading === 'loaded'" class="cards__list">
+      <ul class="cards__list">
         <CardComponent
           v-for="character in characters"
           :key="character.id"
@@ -33,7 +32,6 @@ export default {
       value: "",
       episodesArr: [],
       nextPage: "",
-      loading: "loaded",
     };
   },
   components: { FilterComponent, CardComponent },

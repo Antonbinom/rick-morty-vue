@@ -3,7 +3,6 @@ const characters = {
 		characters: [],
 		searchValue: '',
 		sortValue: '',
-		loading: "loaded"
 	},
 	mutations: {
 		setCharacters(state, data) {
@@ -16,9 +15,6 @@ const characters = {
 		setSortValue(state, value) {
 			state.sortValue = value
 		},
-		setLoading(state, value) {
-			state.loading = value
-		},
 	},
 	actions: {
 		setCharacters({commit}, data) {
@@ -30,18 +26,12 @@ const characters = {
 		setSortValue({commit}, value) {
 			commit('setSortValue', value)
 		},
-		setLoading({commit}, value) {
-			commit('setLoading', value)
-		},
 	},
 	getters: {
 		getCharacters(store) {
 			return store.characters.filter(item => item.name.toLowerCase().trim().includes(store.searchValue.toLowerCase().trim())).filter(item => item.status.toLowerCase().includes(store.sortValue.toLowerCase()))
 		},
 		getSearchValue(store) {
-			return store.searchValue
-		},
-		getLoading(store) {
 			return store.searchValue
 		},
 	},
