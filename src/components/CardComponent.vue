@@ -43,9 +43,6 @@ export default {
     filteredEpisodes() {
       return this.episodes
         .filter((episode) => episode.characters.includes(this.character.url))
-        .sort(function () {
-          return 0.5 - Math.random();
-        })
         .slice(0, 5);
     },
   },
