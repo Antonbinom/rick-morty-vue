@@ -9,6 +9,8 @@
       :alt="character.name"
     />
     <div class="cards__item-info">
+      <span class="cards__item-text">ID: {{ character.id }}</span>
+      <span class="cards__item-text">Status: {{ character.status }}</span>
       <span class="cards__item-text">Species: {{ character.species }}</span>
       <span class="cards__item-text"
         >Location: {{ character.location.name }}</span

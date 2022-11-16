@@ -1,7 +1,22 @@
 <template>
   <main class="cards">
     <div class="container">
-      <FilterComponent />
+      <div class="cards__filter">
+        <input
+          @input="onSearch()"
+          v-model="name"
+          id="filter"
+          class="cards-search"
+          type="text"
+          placeholder="Введите имя персонажа"
+        />
+        <select @change="onSort()" v-model="status" class="cards-select">
+          <option value="dead">Dead</option>
+          <option value="alive">Alive</option>
+          <option value="unknown">Unknown</option>
+          <option value="">All</option>
+        </select>
+      </div>
       <ul class="cards__list">
         <CardComponent
           v-for="character in characters"
@@ -9,14 +24,7 @@
           :character="character"
           :episodes="episodes"
         />
-        <div
-          v-observe-visibility="{
-            callback: handleInfinityScroll,
-            intersection: {
-              threshold: 0,
-            },
-          }"
-        ></div>
+        <div v-observe-visibility="handleInfinityScroll"></div>
       </ul>
     </div>
   </main>
@@ -24,17 +32,19 @@
 
 <script>
 import CardComponent from "@/components/CardComponent.vue";
-import FilterComponent from "@/components/FilterComponent.vue";
 import axios from "axios";
+import { debounce } from "debounce";
 export default {
   data() {
     return {
-      value: "",
       episodesArr: [],
       nextPage: "",
+      pages: "",
+      status: "",
+      name: "",
     };
   },
-  components: { FilterComponent, CardComponent },
+  components: { CardComponent },
 
   computed: {
     characters() {
@@ -57,10 +67,31 @@ export default {
           ]);
           if (response.data.info.next !== null) {
             this.nextPage = response.data.info.next;
+            this.pages = response.data.info.pages;
           }
         });
       };
-      if (this.nextPage !== null) getCharacters(this.nextPage);
+      if (this.nextPage.replace(/[^\d]/g, "") == this.pages) {
+        return;
+      } else {
+        getCharacters(
+          `${this.nextPage}&name=${this.name}&status=${this.status}`
+        );
+      }
+    },
+    onSearch: debounce(function () {
+      this.onSort();
+    }, 500),
+
+    onSort() {
+      axios
+        .get(
+          `https://rickandmortyapi.com/api/character/?name=${this.name}&status=${this.status}`
+        )
+        .then((response) => {
+          this.$store.dispatch("setCharacters", response.data.results);
+        })
+        .catch((error) => console.log(error.message));
     },
   },
 
