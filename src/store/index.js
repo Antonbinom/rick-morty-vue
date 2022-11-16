@@ -9,6 +9,7 @@ Vue.use(Vuex)
 const vuexLocal = new VuexPersistence({
 	storage: window.localStorage
 })
+
 const store = new Vuex.Store({
 	modules: {
 		characters,

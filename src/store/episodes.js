@@ -4,7 +4,8 @@ const episodes = {
 	},
 	mutations: {
 		setEpisodes(state, data) {
-			state.episodes = [...data]
+			state.episodes = []
+			state.episodes = data
 		}
 	},
 	actions: {

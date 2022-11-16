@@ -3,7 +3,12 @@
 	padding: 20px 0;
 }
 .cards__filter {
+	position: sticky;
 	display: flex;
+	width: 100%;
+	top: 110px;
+	padding: 20px 0;
+	background: #ffffff;
 }
 .cards-search {
 	width: 100%;
