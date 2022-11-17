@@ -17,7 +17,8 @@
           <option value="">All</option>
         </select>
       </div>
-      <ul class="cards__list">
+
+      <ul class="cards__list" v-if="loading">
         <CardComponent
           v-for="character in characters"
           :key="character.id"
@@ -25,6 +26,7 @@
         />
         <div v-observe-visibility="handleInfinityScroll"></div>
       </ul>
+      <div v-if="!loading" class="empty">Ничего не найдено!</div>
     </div>
   </main>
 </template>
@@ -41,6 +43,7 @@ export default {
       pages: "",
       status: "",
       name: "",
+      loading: true,
     };
   },
   components: { CardComponent },
@@ -91,8 +94,12 @@ export default {
           this.nextPage = response.data.info.next;
           this.pages = response.data.info.pages;
           this.currentPage = +response.data.info.next.replace(/[^\d]/g, "") - 1;
+          this.loading = true;
         })
-        .catch((error) => console.log(error.message));
+        .catch((error) => {
+          console.log(error.message);
+          this.loading = false;
+        });
     },
   },
 
