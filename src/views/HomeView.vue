@@ -93,7 +93,10 @@ export default {
           this.$store.dispatch("setCharacters", response.data.results);
           this.nextPage = response.data.info.next;
           this.pages = response.data.info.pages;
-          this.currentPage = +response.data.info.next.replace(/[^\d]/g, "") - 1;
+          if (response.data.info.next !== null) {
+            this.currentPage =
+              +response.data.info.next.replace(/[^\d]/g, "") - 1;
+          }
           this.loading = true;
         })
         .catch((error) => {
