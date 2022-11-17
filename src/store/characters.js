@@ -1,7 +1,6 @@
 const characters = {
 	state: {
 		characters: [],
-		sortValue: '',
 	},
 	mutations: {
 		setCharacters(state, data) {
@@ -12,7 +11,6 @@ const characters = {
 	actions: {
 		setCharacters({commit}, data) {
 			commit('setCharacters', data)
-
 		},
 	},
 	getters: {

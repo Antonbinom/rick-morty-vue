@@ -5,20 +5,19 @@
 .cards__filter {
 	position: sticky;
 	display: flex;
+	justify-content: center;
 	width: 100%;
 	top: 110px;
 	padding: 20px 0;
 	background: #ffffff;
 }
 .cards-search {
-	width: 100%;
-	max-width: 300px;
+	width: 300px;
 	height: auto;
 	margin-right: 20px;
 }
 .cards-select {
-	width: 100%;
-	max-width: 300px;
+	width: 300px;
 }
 .cards__list {
 	display: flex;
@@ -29,7 +28,7 @@
 .cards__item {
 	display: flex;
 	flex-direction: column;
-	max-width: 300px;
+	width: 300px;
 	height: auto;
 	padding: 30px 20px;
 	background: tomato;
@@ -64,4 +63,24 @@
 .cards__item-text {
 	display: inline-block;
 	width: 100%;
+}
+
+@media (max-width: 576px) {
+	.cards {
+		margin-top: 70px;
+	}
+	.cards__item {
+		width: 100%;
+	}
+	.cards__filter {
+		flex-wrap: wrap;
+	}
+	.cards-search {
+		width: 100%;
+		margin-right: 0;
+		margin-bottom: 10px;
+	}
+	.cards-select {
+		width: 100%;
+	}
 }
