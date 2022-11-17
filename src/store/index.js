@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist'
 
 import characters from './characters'
-import episodes from './episodes'
+
 Vue.use(Vuex)
 
 const vuexLocal = new VuexPersistence({
@@ -13,7 +13,6 @@ const vuexLocal = new VuexPersistence({
 const store = new Vuex.Store({
 	modules: {
 		characters,
-		episodes,
 	},
 	plugins: [vuexLocal.plugin]
 })

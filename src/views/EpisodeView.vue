@@ -1,5 +1,5 @@
 <template>
-  <div class="episode__wrapper">
+  <div class="episode__wrapper" v-if="episode">
     <div class="episode__card">
       <h1 class="episode-title">{{ episode.name }}</h1>
       <span class="episode-date">Release date: {{ episode.air_date }}</span>
@@ -7,7 +7,7 @@
         <ul class="episode__list">
           <li
             class="episode__item"
-            v-for="character in filteredCharacters"
+            v-for="character in characters"
             :key="character.id"
           >
             <router-link
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -32,21 +33,25 @@ export default {
       characters: "",
     };
   },
-  computed: {
-    filteredCharacters() {
-      return this.characters.filter((character) =>
-        character.episode.includes(this.episode.url)
-      );
-    },
-  },
   created() {
     const episodeId = this.$route.params.id;
-    const item = this.$store.getters["getEpisodes"].find(
-      (el) => el.id === +episodeId
-    );
-    this.episode = item;
+    axios
+      .get(`https://rickandmortyapi.com/api/episode/${episodeId}`)
+      .then((response) => {
+        this.episode = response.data;
+        let characters = this.episode.characters
+          .map((item) =>
+            item.replace("https://rickandmortyapi.com/api/character/", "")
+          )
+          .join();
 
-    this.characters = this.$store.getters["getCharacters"];
+        axios
+          .get(`https://rickandmortyapi.com/api/character/${characters}`)
+          .then((response) => {
+            this.characters = response.data;
+          });
+      })
+      .catch((error) => console.log(error.message));
   },
 };
 </script>

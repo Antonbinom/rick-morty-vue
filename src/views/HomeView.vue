@@ -22,7 +22,6 @@
           v-for="character in characters"
           :key="character.id"
           :character="character"
-          :episodes="episodes"
         />
         <div v-observe-visibility="handleInfinityScroll"></div>
       </ul>
@@ -37,8 +36,8 @@ import { debounce } from "debounce";
 export default {
   data() {
     return {
-      episodesArr: [],
       nextPage: "",
+      currentPage: "",
       pages: "",
       status: "",
       name: "",
@@ -50,28 +49,27 @@ export default {
     characters() {
       return this.$store.getters["getCharacters"];
     },
-    episodes() {
-      return this.$store.getters["getEpisodes"];
-    },
   },
 
   methods: {
     handleInfinityScroll(isVisible) {
       if (!isVisible) return;
       const getCharacters = (url) => {
-        const characters = this.$store.getters["getCharacters"];
         axios.get(url).then((response) => {
+          const characters = this.$store.getters["getCharacters"];
+
           this.$store.dispatch("setCharacters", [
             ...characters,
             ...response.data.results,
           ]);
+          this.pages = response.data.info.pages;
+          this.currentPage = +url.replace(/[^\d]/g, "");
           if (response.data.info.next !== null) {
             this.nextPage = response.data.info.next;
-            this.pages = response.data.info.pages;
           }
         });
       };
-      if (this.nextPage.replace(/[^\d]/g, "") == this.pages) {
+      if (this.currentPage === this.pages) {
         return;
       } else {
         getCharacters(
@@ -90,28 +88,20 @@ export default {
         )
         .then((response) => {
           this.$store.dispatch("setCharacters", response.data.results);
+          this.nextPage = response.data.info.next;
+          this.pages = response.data.info.pages;
+          this.currentPage = +response.data.info.next.replace(/[^\d]/g, "") - 1;
         })
         .catch((error) => console.log(error.message));
     },
   },
 
   mounted() {
-    this.episodesArr = [];
     axios.get("https://rickandmortyapi.com/api/character").then((response) => {
       this.$store.dispatch("setCharacters", response.data.results);
       this.nextPage = response.data.info.next;
+      this.currentPage = response.request.responseURL;
     });
-
-    const getEpisodes = (url) => {
-      axios.get(url).then((response) => {
-        this.episodesArr = [...this.episodesArr, ...response.data.results];
-        if (response.data.info.next !== null) {
-          getEpisodes(response.data.info.next);
-        }
-      });
-      this.$store.dispatch("setEpisodes", this.episodesArr);
-    };
-    getEpisodes("https://rickandmortyapi.com/api/episode");
   },
 };
 </script>

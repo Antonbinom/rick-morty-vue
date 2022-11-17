@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -26,10 +27,12 @@ export default {
   },
   created() {
     const characterId = this.$route.params.id;
-    const item = this.$store.getters["getCharacters"].find(
-      (el) => el.id === +characterId
-    );
-    this.character = item;
+    axios
+      .get(`https://rickandmortyapi.com/api/character/${characterId}`)
+      .then((response) => {
+        this.character = response.data;
+      })
+      .catch((error) => console.log(error.message));
   },
 };
 </script>
